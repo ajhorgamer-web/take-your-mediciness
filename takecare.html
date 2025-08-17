@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌸 Friendly Reminder 🌸</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: linear-gradient(to bottom, #ffe6fa, #c8f0ff);
+      transition: background 1s ease-in-out;
+    }
+
+    /* Floating emojis */
+    .emoji {
+      position: absolute;
+      font-size: 28px;
+      animation: floatUp 8s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* Card */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 600px;
+      max-width: 90%;
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .card h1 {
+      color: #6a1b9a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 20px;
+      color: #444;
+      white-space: pre-line;
+    }
+
+    .card img {
+      margin-top: 15px;
+      width: 180px;
+      border-radius: 12px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      background: #ff69b4;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .card button:hover {
+      background: #ff85c1;
+    }
+
+    /* Night sky background */
+    .night-sky {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("360_F_1002964906_LTxzSWPFxCA7zRF6rhEhdWB747LRV3Ki (3).jpg") no-repeat center center fixed;
+      background-size: cover;
+      z-index: -1;
+      display: none;
+    }
+
+    /* Good Night text */
+    .good-night {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 120px;
+      color: #fff;
+      text-shadow: 0 0 30px #ff69b4, 0 0 60px #ff85c1;
+      font-weight: bold;
+      opacity: 0;
+      animation: fadeGlow 3s ease-in-out infinite;
+      display: none;
+    }
+
+    @keyframes fadeGlow {
+      0%, 100% { opacity: 0.3; text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff85c1; }
+      50% { opacity: 1; text-shadow: 0 0 50px #ff69b4, 0 0 100px #ff85c1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Music -->
+  <audio id="bgm" autoplay loop>
+    <source src="Take care (6).mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Reminder Card -->
+  <div class="card">
+    <h1 id="title">🌸 Reminder 🌸</h1>
+    <p id="message">💊 Don't forget to take your medicine on time.</p>
+    <!-- first pill gif -->
+    <img src="pill-happy-pill.gif" alt="Cute GIF" id="cardGif">
+    <br>
+    <button id="nextBtn">Next ➡️</button>
+  </div>
+
+  <!-- Night sky background -->
+  <div class="night-sky" id="nightSky"></div>
+
+  <!-- Big Good Night Text -->
+  <div class="good-night" id="goodNightText">Good Night 😴</div>
+
+  <script>
+    // Floating emojis
+    const emojis = ["💖","🌙","✨","🌸","😴"];
+    function spawnEmoji() {
+      const emoji = document.createElement("div");
+      emoji.className = "emoji";
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * window.innerWidth + "px";
+      emoji.style.top = "100vh";
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 8000);
+    }
+    setInterval(spawnEmoji, 600);
+
+    // Step messages
+    const steps = [
+      "💊 Don't forget to take your medicine on time.",
+      "😴 Please sleep early and take good care of your health.",
+      "🌙 Sleep well and rest your mind & body.",
+      "💖 Good night, sweet dreams! 🌸✨"
+    ];
+    let currentStep = 0;
+
+    const messageEl = document.getElementById("message");
+    const nextBtn = document.getElementById("nextBtn");
+    const gifEl = document.getElementById("cardGif");
+
+    nextBtn.addEventListener("click", () => {
+      currentStep++;
+      if (currentStep < steps.length) {
+        messageEl.innerText = steps[currentStep];
+
+        // after first click → change gif
+        if (currentStep === 1) {
+          gifEl.src = "cat-vodk.gif"; // show Good Night gif
+        }
+
+        if (currentStep === steps.length - 1) {
+          nextBtn.innerText = "Close ✨";
+        }
+      } else {
+        document.querySelector(".card").style.display = "none";
+        document.getElementById("nightSky").style.display = "block";
+        document.getElementById("goodNightText").style.display = "block";
+      }
+    });
+
+    // Chrome autoplay fix
+    window.addEventListener("click", () => {
+      const bgm = document.getElementById("bgm");
+      if (bgm.paused) bgm.play();
+    });
+  </script>
+</body>
+</html>
